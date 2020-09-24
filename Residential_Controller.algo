@@ -1,0 +1,79 @@
+/* Here I will enter the data that cannot be changed after asking for it. */
+
+SET numberElevators TO READ numberElevators 
+SET numberFloorsInBuilding TO READ numberFloorsInBuilding
+SET  
+
+
+
+
+
+
+SEQUENCE Elevator USING numberElevators AND numberFloorsInBuilding
+
+    SET elevatorIdList
+    SET floorIdList 
+    SET xElevator to numberElevators
+    SET xFloor to numberFloorsInBuilding
+
+    IF xElevator > 0 THEN
+
+        REPEAT
+            SEQUENCE
+            SET elevatorIdList[xElevator - 1] TO xElevator
+            SET xElevator TO xElevator - 1
+            ENDSEQUENCE
+        UNTIL xElevator > 0
+    
+    IF xFloor > 0 THEN
+        REPEAT
+            SEQUENCE
+            SET floorIdList[xFloor -1] TO xFloor
+            SET xFloor TO xFloor - 1
+            ENDSEQUENCE
+        UNTIL xFloor > 0     
+
+ENDSEQUENCE
+
+
+SEQUENCE CallButtons
+SET direction[]
+SET floorWhereRequestWasMade
+
+SET direction[0] to up
+SET direction[1] to down
+
+
+ENDSEQUENCE
+
+/* Cette sequence va  decider quel ascenseur il envoi */ 
+SEQUENCE Column
+
+
+
+
+ENDSEQUENCE
+
+
+SEQUENCE Doors USING registerWhereElevatorsAre
+
+/* Si l'ascenseur est dans le floor 
+
+IF registerWhereElevatorsAre
+
+
+ENDSEQUENCE
+
+SEQUENCE FloorRequestButtons 
+    SET direction 
+
+
+ENDSEQUENCE
+
+SEQUENCE controllerResidentialBuilding
+ENDSEQUENCE
+
+
+
+
+
