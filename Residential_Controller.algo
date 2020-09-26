@@ -1,79 +1,256 @@
-/* Here I will enter the data that cannot be changed after asking for it. */
+INIT numberOfColumns TO 1
+INIT floorsAmount TO 10        
+INIT amountOfElevatorPerColumn TO 2
 
-SET numberElevators TO READ numberElevators 
-SET numberFloorsInBuilding TO READ numberFloorsInBuilding
-SET  
+DEFINE Column USING id AND status AND amountOfElevatorPerColumn AND floorsAmount
+    ID: id
+    status: status
+    minimumfloor: m_minimumFloor          
+    maximumfloor: m_maximumFloor         
+    elevatorsList: EMPTY LIST           
+    goToTopButtonsList: EMPTY LIST     
+    moveDownButtonsList: EMPTY LIST  
+
+    CALL createElevatorList WITH amountOfElevatorPerColumn
+    CALL creategoToTopButtonsList WITH floorsAmount 
+    CALL createmoveDownButtonsList WITH floorsAmount 
+
+    SEQUENCE createElevatorList USING amountOfElevatorPerColumn
+        FOR EACH amountOfElevatorPerColumn 
+            INIT iterator TO 1
+            INIT newElevator TO INSTANTIATE Elevator WITH iterator AND 1 AND "close the door" AND floorsAmount 
+            ADD newElevator TO elevatorList
+            INCREMENT iterator by 1
+        ENDFOR
+    ENDSEQUENCE    
+
+    SEQUENCE creategoToTopButtonsList USING floorsAmount 
+        FOR EACH floorsAmount  
+            INIT iterator TO 1
+            IF iterator NOT EQUAL TO maximumFloor THEN
+                INIT newgoToTopButtons TO INSTANTIATE CallButton WITH iterator AND 1 AND "offLine"
+                ADD newgoToTopButtons TO goToTopButtonsList
+            ENDIF
+            INCREMENT iterator by 1
+        ENDFOR
+    ENDSEQUENCE
+
+    SEQUENCE createmoveDownButtonsList USING floorsAmount 
+        FOR EACH floorsAmount  
+            INIT iterator TO 1
+            IF iterator IS GREATER THAN TO minimumFloor THEN
+                INIT newmoveDownButtons TO INSTANTIATE CallButton WITH iterator AND 1 AND "offLine"
+                ADD newmoveDownButtons TO moveDownButtonsList
+            ENDIF
+            INCREMENT iterator by 1
+        ENDFOR
+    ENDSEQUENCE
+
+
+    SEQUENCE findBestElevator USING floorWhereItIsNow AND ongoingDirection AND elevatorsList OF newColumn
+        INIT activeElevatorsList TO EMPTY
+        INIT inactiveElevatorsList TO EMPTY
+
+        FOR EACH newElevator IN elevatorsList
+            IF newElevator IS NOT "inactive" AND newElevator status IS EQUAL TO ongoingDirection THEN 
+                IF newElevator status IS "up" AND newElevator floor IS IS LESS THAN floorWhereItIsNow || newElevator status IS "down" AND newElevator floor IS GREATER THAN floorWhereItIsNow THEN
+                    ADD newElevator TO activeElevatorsList
+                ENDIF
+            ELSE 
+                ADD newElevator TO inactiveElevatorsList
+            ENDIF
+        ENDFOR
+
+        IF activeElevatorsList IS not EMPTY THEN
+            CALL locateClosestElevator USING activeElevatorsList
+        ELSE 
+            CALL locateClosestElevator USING inactiveElevatorsList         
+        RETURN bestElevator 
+    ENDSEQUENCE
+
+
+    SEQUENCE locateClosestElevator USING registerList
+        INIT bestElevator TO first elevator (elevator1) OF registerList    
+        INIT bestDistance TO |floor OF bestElevator - floorWhereItIsNow|
+        FOR EACH newElevator IN registerList 
+            IF floor OF newElevator - floorWhereItIsNow IS LESS THAN bestDistance THEN
+                INIT bestElevator TO newElevator           
+            ENDIF
+        ENDFOR
+        RETURN bestElevator 
+    ENDSEQUENCE
+
+ENDDEFINE
+
+
+
+DEFINE Elevator USING id AND status AND floor AND door AND floorsAmount
+    ID: id
+    status: status
+    floor: floor
+    elevatorDoor: INSTANTIATE Door WITH iterator AND "close the door"
+    floorDoorsList: EMPTY LIST                                   
+    floorButtonsList: EMPTY LIST                                  
+    floorList: EMPTY LIST                                    
+
+    CALL createFloorDoorsList WITH floorsAmount 
+    CALL createFloorButtonsList WITH floorsAmount 
+
+    SEQUENCE createFloorDoorsList USING floorsAmount 
+        FOR EACH floorsAmount  
+            INIT iterator TO 1
+            INIT newFloorDoor TO INSTANTIATE Door WITH iterator AND "close the door"
+            ADD newFloorDoor TO floorDoorsList
+            INCREMENT iterator by 1
+        ENDFOR
+    ENDSEQUENCE
+
+    SEQUENCE createFloorButtonsList USING floorsAmount  
+        FOR EACH floorsAmount  
+            INIT iterator TO 1
+            INIT newFloorButton TO INSTANTIATE CallButton WITH iterator AND "offLine"
+            ADD newFloorButton TO floorButtonsList
+            INCREMENT iterator by 1
+        ENDFOR
+    ENDSEQUENCE
+
+
+    SEQUENCE ElevatorGoTo USING elevator AND floorList AND requestFloor
+        WHILE floorList OF elevator IS NOT EMPTY DO 
+
+            IF status OF elevator IS "inactive" THEN 
+                IF floor OF elevator IS LESS THAN requestFloor THEN
+                    INIT status OF elevator TO "up"
+                ELSE 
+                    INIT status OF elevator TO "down"
+                ENDIF
+            ENDIF
+
+            IF elevator status IS "up" THEN
+                CALL goToTop WITH elevator 
+            ELSE
+                CALL moveDown WITH elevator
+        ENDWHILE
+    ENDSEQUENCE
+
+
+    SEQUENCE goToTop USING elevator     
+        FOR EACH floorN IN floorList
+            IF doors are open THEN
+                CALL closeDoors
+            ENDIF
+            MOVE elevator UP to the next item
+            DISPLAY floorN ON internal AND external displays
+            CALL openDoors
+            REMOVE floor
+            INIT CallButton OF goToTopButtonsList WITH INDEX EQUAL floorN TO "offLine" 
+            INIT CallButton OF goToTopButtonsList WITH INDEX EQUAL floorN TO "offLine"
+        ENDFOR
+
+        IF floorList IS EMPTY THEN
+            INIT status OF elevator TO "inactive"
+        ELSE 
+            INIT status OF elevator TO "down"
+        ENDIF
+    ENDSEQUENCE
+
+
+    SEQUENCE goToBottom USING elevator     
+        FOR EACH floor IN floorList
+            IF doors are open THEN
+                CALL closeDoors
+            ENDIF
+            MOVE elevator DOWN to the next item
+            DISPLAY floorWhereItIsNowNumber ON internal AND external displays
+            DISPLAY floor ON internal AND external displays
+            CALL openDoors
+            REMOVE floor
+            INIT CallButton OF moveDownButtonsList WITH INDEX EQUAL floorN TO "offLine" 
+            INIT CallButton OF floorButtonsList WITH INDEX EQUAL floorN TO "offLine"
+        ENDFOR
+
+        IF floorList IS EMPTY THEN
+            INIT elevator status TO "inactive"
+        ELSE 
+            INIT elevator status TO "up"
+        ENDIF
+    ENDSEQUENCE
+
+
+    SEQUENCE openDoors USING elevator AND floor
+        IF elevator floor IS EQUAL TO floor THEN
+                open elevatorDoor OF elevator
+                INIT elevatorDoor OF elevator TO "OPENED"
+                open floorDoor OF floorDoorsList WITH INDEX EQUAL floor
+                INIT floorDoor  OF floorDoorsList WITH INDEX EQUAL floor TO "OPENED"
+            CALL closeDoors
+        ENDIF
+    ENDSEQUENCE
+
+    SEQUENCE closeDoors USING elevator
+            close elevatorDoor OF elevator
+            INIT elevatorDoor OF elevator TO "close the door"
+            close floorDoor OF floorDoorsList WITH INDEX EQUAL floor
+            INIT floorDoor OF floorDoorsList WITH INDEX EQUAL floor TO "close the door" 
+    ENDSEQUENCE
+
+
+    SEQUENCE addFloorToFloorList USING elevator AND floor 
+        ADD floor TO floorList OF elevator 
+        SORT floorList OF elevator TO ASCENDING
+    ENDSEQUENCE
+
+ENDDEFINE
+
+
+
+DEFINE Door USING id AND status
+    ID: id
+    Status: status
+    Floor: floor
+ENDDEFINE
+
+
+DEFINE CallButton USING id AND status
+    ID: id,
+    Status: status
+    Floor: floor
+ENDDEFINE 
 
 
 
 
-
-
-SEQUENCE Elevator USING numberElevators AND numberFloorsInBuilding
-
-    SET elevatorIdList
-    SET floorIdList 
-    SET xElevator to numberElevators
-    SET xFloor to numberFloorsInBuilding
-
-    IF xElevator > 0 THEN
-
-        REPEAT
-            SEQUENCE
-            SET elevatorIdList[xElevator - 1] TO xElevator
-            SET xElevator TO xElevator - 1
-            ENDSEQUENCE
-        UNTIL xElevator > 0
-    
-    IF xFloor > 0 THEN
-        REPEAT
-            SEQUENCE
-            SET floorIdList[xFloor -1] TO xFloor
-            SET xFloor TO xFloor - 1
-            ENDSEQUENCE
-        UNTIL xFloor > 0     
-
+SEQUENCE requestElevator USING floorWhereItIsNow AND requestedDirection
+    READ floorWhereItIsNow AND requestedDirection
+    IF requestedDirection is UP THEN
+        INIT CallButton OF goToTopButtonsList WITH INDEX EQUAL floorWhereItIsNow TO "onLine"
+    ELSE 
+        INIT CallButton OF moveDownButtonsList WITH INDEX EQUAL floorWhereItIsNow TO "onLine"
+    ENDIF
+    CALL findBestElevator WITH floorWhereItIsNow AND requestedDirection AND column elevatorsList RETURNING bestElevator
+    CALL addFloorToFloorList WITH bestElevator AND floorWhereItIsNow RETURNING floorList
+    CALL ElevatorGoTo WITH bestElevator AND floorList AND floorWhereItIsNow
 ENDSEQUENCE
 
 
-SEQUENCE CallButtons
-SET direction[]
-SET floorWhereRequestWasMade
-
-SET direction[0] to up
-SET direction[1] to down
-
-
-ENDSEQUENCE
-
-/* Cette sequence va  decider quel ascenseur il envoi */ 
-SEQUENCE Column
-
-
-
-
+SEQUENCE requestStop USING requestFloor
+    READ requestedFloor AND requestedDirection
+    IF requestedDirection is UP THEN
+        INIT CallButton OF goToTopButtonsList WITH INDEX EQUAL requestFloor TO "onLine"
+    ELSE 
+        INIT CallButton OF moveDownButtonsList WITH INDEX EQUAL requestFloor TO "onLine"
+    ENDIF
+    CALL addFloorToFloorList WITH elevator AND requestFloor
+    CALL ElevatorGoTo WITH elevator AND floorList AND requestFloor
 ENDSEQUENCE
 
 
-SEQUENCE Doors USING registerWhereElevatorsAre
-
-/* Si l'ascenseur est dans le floor 
-
-IF registerWhereElevatorsAre
-
-
-ENDSEQUENCE
-
-SEQUENCE FloorRequestButtons 
-    SET direction 
-
-
-ENDSEQUENCE
-
-SEQUENCE controllerResidentialBuilding
-ENDSEQUENCE
-
-
-
+DEFINE residentialController USING floorsAmount AND amountOfElevatorPerColumn AND numberOfColumns
+    FOR EACH numberOfColumns
+        INIT iterator TO 1
+        INIT newColumn TO INSTANTIATE Column WITH iterator AND "active" AND floorsAmount  AND amountOfElevatorPerColumn
+        INCREMENT iterator by 1        
+    ENDFOR
+ENDDEFINE 
 
 
