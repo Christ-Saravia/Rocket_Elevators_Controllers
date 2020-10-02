@@ -87,6 +87,16 @@
 
     <!-- Optional JavaScript -->
 <script>
+  var num_floor = 10;
+  var elevator_number = 2;
+  var positionAscenseurA = 2;
+  var positionAscenseurB = 6;
+  var minimumFloor = 1;
+  var maximumFloor = num_floor;
+  var status = 0;      // 0 = false pour le moment et 1 = true  
+  var floorWhereRequestWasMade = 7;
+  var ux = "CLOSED";
+
   class Column {
     constructor(num_floor, elevator_number, positionAscenseurA, positionAscenseurB, minimumFloor, maximumFloor, floorWhereRequestWasMade) {
       this.num_floor = num_floor;
@@ -152,15 +162,15 @@
       this.ux = ux;
       this.status = status;
       this.requestWasMade = floorWhereRequestWasMade;
-
-    createDoorsList(){
+    }
+    createDoorsList() {
       var doorsList = [];
       var doorsList[this.status] = ux;
       console.log("Voici etat des portes par etagges vue de l'exterieur ");
       console.log(doorsList);
     }
 
-    createMoveUp(){
+    createMoveUp() {
       var moveUp = 1;
       var etageDesire = 8;
       var difference = etageDesire - (floorWhereRequestWasMade -1);
@@ -169,12 +179,15 @@
       floorList[this.requestWasMade - 1] = 'A1';
       console.log(floorList);
       while(iterator > 0){
-        var last
+        var lastPositionElevator = floorList.indexOf('A1');
+        console.log(floorList);
+        iterator -= 1;
       }
     }
     }
   }
 var myColumn = new Column(10, 2, 2, 6, 1, 10, 3);
+var myElevator = new Elevator(10, )
 var value = myColumn.createButtonList();
 var bigMac = myColumn.createPanelList();
 var first = value.boy;
