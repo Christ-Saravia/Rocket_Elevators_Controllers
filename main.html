@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+  <link rel="stylesheet" href="./main.css">
+</head>
+<body>
+  <div class="wrapper">
+    <div class="row mx-auto" style="width: 500px; padding-top: 5rem;">
+      <div id="barre" class="container">
+        <button type="button" class="btn btn-dark">1</button>
+        <button type="button" class="btn btn-dark">2</button>
+        <button type="button" class="btn btn-dark">3</button>
+        <button type="button" class="btn btn-dark">4</button>
+        <button type="button" class="btn btn-dark">5</button>
+        <button type="button" class="btn btn-dark">6</button>
+        <button type="button" class="btn btn-dark">7</button>
+        <button type="button" class="btn btn-dark">8</button>
+        <button type="button" class="btn btn-dark">9</button>
+        <button type="button" class="btn btn-dark">10</button>
+      </div>
+    </div>
+
+    <div class="row" style="border: solid 3px indigo;">
+      <div class="container">
+      </div>
+    </div>
+    <div class="row">
+      <div class="container"></div>
+    </div>
+    <div class="row">
+      <div class="container"></div>
+    </div>
+    <div class="row">
+      <div class="container">
+      </div>  
+    </div>
+    <div class="row">
+      <div class="container">    
+      </div> 
+    </div>
+    <div class="row">
+        <div class="col-5"><img src="./elevatorA.png" style="padding-left: 100px;"></div>
+        <div class="col-2" style="border: orange solid 2px;">
+          <div class="row-4" style="border: indigo solid 2px;"><input class="christ" type="image" src="./up.png" style="height: 75px;"/><p id="demo2"></p></div>
+          <div class="row-4">salut</div>
+          <div class="row-4" style="border: indigo solid 2px;"><input class="christ" type="image" src="./down.png" style="height: 75px;"/><p id="demo3"></p></div>
+        </div>
+        <div class="col-5"><img src="./elevatorB.png" style="padding-left: 100px;"></div> 
+    </div>
+  </div>
+
+  
+
+
+
+  
+
+
+    <!-- Optional JavaScript -->
+<script>
+  class Column {
+    constructor(num_floor, elevator_number, positionAscenseurA, positionAscenseurB, minimumFloor, maximumFloor, floorWhereRequestWasMade) {
+      this.num_floor = num_floor;
+      this.elevator_number = elevator_number;
+      this.positionAscenseurA = positionAscenseurA;
+      this.positionAscenseurB = positionAscenseurB;
+      this.minimumFloor = minimumFloor;
+      this.maximumFloor = maximumFloor;
+      this.floorWhereRequestWasMade = floorWhereRequestWasMade;
+    }
+
+    createElevatorList() {
+      var elevatorList = [ [],[] ];
+      elevatorList[0][this.elevator_number -1] = this.positionAscenseurB;
+      elevatorList[0][this.elevator_number -2] = this.positionAscenseurA;
+      elevatorList[1][this.elevator_number -1] = this.elevator_number;
+      elevatorList[1][this.elevator_number -2] = this.elevator_number - 1;
+      console.log(elevatorList);
+      return elevatorList;
+    }
+
+    createButtonList() {
+      var buttonList = [[],[]];
+      for(var row = 0; row < 2; row++){
+      var direction = 'DOWN';
+      if(row == 1){
+        direction = 'UP';
+        this.minimumFloor = this.maximumFloor;
+      }
+        for(var i = 10; this.num_floor > 0; i--) {
+          buttonList[row][this.num_floor - 1] = direction;
+          if(this.num_floor == this.minimumFloor){
+            buttonList[row][this.minimumFloor - 1] = 'DISABLE';  
+          }
+          this.num_floor -= 1
+        }
+      this.num_floor = 10;
+      }
+      console.log(buttonList);
+      var boy = buttonList[1][this.floorWhereRequestWasMade - 1];
+      var girl = buttonList[0][this.floorWhereRequestWasMade - 1];
+      return {
+        boy: boy,
+        girl: girl,
+      };
+    }
+  }
+var myColumn = new Column(10, 2, 2, 6, 1, 10, 3);
+var value = myColumn.createButtonList();
+var first = value.boy;
+var second = value.girl;
+  
+
+document.getElementById("demo2").innerHTML = first;
+document.getElementById("demo3").innerHTML = second;
+
+</script>
+  <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
+</body>
+</html>
