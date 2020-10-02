@@ -70,7 +70,16 @@
       </div>  
     </div>
     <div class="row">
-      <div class="container">    
+      <div class="container">
+        <p id="demo5">bonjour</p>    
+      </div> 
+    <div class="row">
+      <div class="container">
+        <h3>A demonstration of how to access a Text Field</h3>
+        <input type="text" id="myText" valuue="yooooo">
+        <p>Voulez-vous monter ou descendre</p>
+        <button onclick="myFunction()">essaye-le</button>
+        <p id="demo6"></p>    
       </div> 
     </div>
     <div class="row">
@@ -165,7 +174,7 @@
     }
     createDoorsList() {
       var doorsList = [];
-      var doorsList[this.status] = ux;
+      doorsList[this.status] = ux;
       console.log("Voici etat des portes par etagges vue de l'exterieur ");
       console.log(doorsList);
     }
@@ -185,11 +194,73 @@
       }
     }
     }
-  }
+    class Doors {
+      constructor(status){
+        this.status = status;
+      }
+
+      doorsControl(){
+        if(this.status == 1){
+          var doorsStatus = "OPENED";
+
+        } else{
+          doorsStatus = "CLOSED";
+        }
+        
+        console.log(doorsStatus);
+        return doorsStatus;
+      }
+    }
+
+    class Button {
+      constructor(num_floor,floorWhereRequestWasMade, status){
+        this.floor = num_floor;
+        this.signal = floorWhereRequestWasMade -1;
+        this.status = status;
+      }
+      
+      RequestElevator(){
+        var appelButtonList = [];
+        if(this.status == 1){
+          appelButtonList[this.signal] = "ON";
+          var iterator = 1;
+          while(iterator > 0){
+            var index = appelButtonList.indexOf('ON');
+            iterator -= 1;
+            console.log('The index of ON' + index);
+          }
+        console.log(appelButtonList);
+        return True;
+        }
+      }
+    }
+
+    class GoTo {
+      constructor(nom){
+        this.nom = nom;
+      }
+
+      commencerLeProgramme(){
+        console.log("Voulez- vous monter ou descendre");
+        console.log("Monter = U Descendre = D");
+        var actionButton = document.getElementById("myText").value;
+        document.getElementById("demo6").innerHTML = actionButton;
+      }
+
+    }
+
+    function myFunction(){
+        var actionButton = document.getElementById("myText").value;
+        document.getElementById("demo6").innerHTML = actionButton;
+    }
+
+  
 var myColumn = new Column(10, 2, 2, 6, 1, 10, 3);
-var myElevator = new Elevator(10, )
+var myElevator = new Elevator(10, 1, 1, 7);
+var myGoTo = new GoTo(5);
 var value = myColumn.createButtonList();
 var bigMac = myColumn.createPanelList();
+var mcPoulet = myGoTo.commencerLeProgramme();
 var first = value.boy;
 var second = value.girl;
   
