@@ -7,7 +7,35 @@
 
   <!-- Bootstrap CSS -->
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
-  <link rel="stylesheet" href="./main.css">
+  <style>
+  .btn-dark:hover{
+      background-color: yellow;
+  }
+
+  .christ:hover{
+      background-color: orange;
+  }
+
+
+  .center {
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+      width: 50%;
+    }
+
+  .wrapper{
+      background-color: grey;
+  }
+
+  p{
+      text-align: center;
+  }
+
+  img{
+      margin: auto;
+  }
+  </style>
 </head>
 <body>
   <div class="wrapper">
@@ -38,6 +66,7 @@
     </div>
     <div class="row">
       <div class="container">
+        <p id="demo4">salut</p>
       </div>  
     </div>
     <div class="row">
@@ -46,20 +75,14 @@
     </div>
     <div class="row">
         <div class="col-5"><img src="./elevatorA.png" style="padding-left: 100px;"></div>
-        <div class="col-2" style="border: orange solid 2px;">
-          <div class="row-4" style="border: indigo solid 2px;"><input class="christ" type="image" src="./up.png" style="height: 75px;"/><p id="demo2"></p></div>
-          <div class="row-4">salut</div>
-          <div class="row-4" style="border: indigo solid 2px;"><input class="christ" type="image" src="./down.png" style="height: 75px;"/><p id="demo3"></p></div>
+        <div class="col-2">
+          <div class="row-4" style="padding-top: 50px;padding-left: 100px;"><input class="christ" type="image" src="./up.png" style="height: 75px;"/><p id="demo2"></p></div>
+          <div class="row-4" style="padding-top: 50px;padding-left: 100px;"><input class="christ" type="image" src="./down.png" style="height: 75px;"/><p id="demo3"></p></div>
         </div>
         <div class="col-5"><img src="./elevatorB.png" style="padding-left: 100px;"></div> 
     </div>
   </div>
 
-  
-
-
-
-  
 
 
     <!-- Optional JavaScript -->
@@ -110,15 +133,57 @@
         girl: girl,
       };
     }
+
+    createPanelList(){
+      var panelList = [];
+      var iterator = this.num_floor;
+      while(iterator > 0){
+        panelList[iterator - 1] = iterator;
+        iterator -= 1;
+      console.log("Voici panel list: ");
+      console.log(panelList);
+      }  
+    } 
+  }
+
+  class Elevator {
+    constructor(num_floor, ux, status, floorWhereRequestWasMade){
+      this.num_floor = num_floor;
+      this.ux = ux;
+      this.status = status;
+      this.requestWasMade = floorWhereRequestWasMade;
+
+    createDoorsList(){
+      var doorsList = [];
+      var doorsList[this.status] = ux;
+      console.log("Voici etat des portes par etagges vue de l'exterieur ");
+      console.log(doorsList);
+    }
+
+    createMoveUp(){
+      var moveUp = 1;
+      var etageDesire = 8;
+      var difference = etageDesire - (floorWhereRequestWasMade -1);
+      var iterator = difference * moveUp;
+      var floorList = [];
+      floorList[this.requestWasMade - 1] = 'A1';
+      console.log(floorList);
+      while(iterator > 0){
+        var last
+      }
+    }
+    }
   }
 var myColumn = new Column(10, 2, 2, 6, 1, 10, 3);
 var value = myColumn.createButtonList();
+var bigMac = myColumn.createPanelList();
 var first = value.boy;
 var second = value.girl;
   
 
 document.getElementById("demo2").innerHTML = first;
 document.getElementById("demo3").innerHTML = second;
+document.getElementById("demo4").innerHTML = bigMac;
 
 </script>
   <!-- jQuery first, then Popper.js, then Bootstrap JS -->
