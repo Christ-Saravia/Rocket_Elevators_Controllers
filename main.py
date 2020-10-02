@@ -4,8 +4,8 @@ positionAscenseurA = 2
 positionAscenseurB = 6
 minimumFloor = 1
 maximumFloor = num_floor
-status = 0      #0 = false pour le moment et 1 = true  
-floorWhereRequestWasMade = 7
+status = 1      #0 = false pour le moment et 1 = true  
+floorWhereRequestWasMade = 10
 
 
 
@@ -22,24 +22,26 @@ class Column:
 
     def createElevatorList(self):
         elevatorList = [None] * self.elevator_number, [None] * self.elevator_number
-        elevatorList [0][elevator_number - 1] = positionAscenseurB
-        elevatorList [0][elevator_number - 2] = positionAscenseurA
-        elevatorList [1][elevator_number - 1] = elevator_number
-        elevatorList [1][elevator_number - 2] = elevator_number - 1
+        elevatorList [0][elevator_number - 1] = self.positionAscenseurB
+        elevatorList [0][elevator_number - 2] = self.positionAscenseurA
+        elevatorList [1][elevator_number - 1] = self.elevator_number
+        elevatorList [1][elevator_number - 2] = self.elevator_number - 1
         for x in elevatorList:
             print(x)
 
 # creation de button haut et bas pour chaque etage a l'exterieur des ascenseurs
 
     def createButtonList(self):
-        buttonList = ['UP'] * self.num_floor , ['DOWN'] * self.num_floor
+        buttonList = ['<UP>'] * self.num_floor , ['<DOWN>'] * self.num_floor
         buttonList[self.elevator_number - self.elevator_number][self.maximumFloor - 1] = 'DISABLE'
         buttonList[self.elevator_number - 1][self.minimumFloor - 1] = 'DISABLE'
-        if buttonList[1][floorWhereRequestWasMade - 1] != 'DISABLE':
-            print(buttonList[1][floorWhereRequestWasMade - 1])
+        print('Here are the button(s) available on your floor \n')
         if buttonList[0][floorWhereRequestWasMade - 1] != 'DISABLE':
             print(buttonList[0][floorWhereRequestWasMade - 1])
-
+        if buttonList[1][floorWhereRequestWasMade - 1] != 'DISABLE':
+            print(buttonList[1][floorWhereRequestWasMade - 1])
+        print('\n')
+        
 #Sa cest ce que l'utilisateur vont voir a l'interieur de l'ascenseur
 
     def createPanelList(self):
@@ -121,8 +123,8 @@ class GoTo:
     def __init__(self, nom):
         self.nom = nom
     def commencerLeProgramme(self):
-        print('Voulez vous monter ou descendre?')
-        print('Monter = U Descendre = D')
+        print('Do you want to go up or down? \n')
+        print('<Up> = U <Down> = D \n')
         actionButton = input()
         if actionButton == 'u' or 'U':
             floorWhereRequestWasMade = 3
@@ -150,7 +152,9 @@ class FindBestElevator:
  Someone is on floor 3 and wants to go to the 7th floor. 
  Elevator A is expected to be sent.
 """
-print('SCENARIO A COMMENCE')
+print(
+    '\n SCENARIO A COMMENCE: \n Elevator A est au 2e etage \n Elevator B est au 6e etage \n Vous etes au 3e etages et vous voulez aller au 7e etages \n'
+    )
 
 scenarioA = Column(10,2,2,6,1,10,floorWhereRequestWasMade)
 
@@ -175,7 +179,7 @@ k.RequestElevator()
 o.createMoveUp()
 
 arr = [1,10,30,15]
-x = 150
+x = 10
 
 
 r = FindBestElevator(arr,x)
