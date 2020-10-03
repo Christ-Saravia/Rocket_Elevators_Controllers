@@ -66,7 +66,7 @@
     </div>
     <div class="row">
       <div class="container">
-        <p id="demo4">salut</p>
+        <p id="demo4"></p>
       </div>  
     </div>
     <div class="row">
@@ -79,7 +79,8 @@
         <input type="text" id="myText" valuue="yooooo">
         <p>Voulez-vous monter ou descendre</p>
         <button onclick="myFunction()">essaye-le</button>
-        <p id="demo6"></p>    
+        <p id="demo6"></p>  
+        <p id="demo9"></p>  
       </div> 
     </div>
     <div class="row">
@@ -158,9 +159,8 @@
       var iterator = this.num_floor;
       while(iterator > 0){
         panelList[iterator - 1] = iterator;
-        iterator -= 1;
-      console.log("Voici panel list: ");
-      console.log(panelList);
+        iterator -= 1;    
+      return panelList;
       }  
     } 
   }
@@ -254,20 +254,43 @@
         document.getElementById("demo6").innerHTML = actionButton;
     }
 
+    class FindBestElevator{
+      constructor(arr, n, x){
+        this.arr = arr;
+        this.x = x;
+        this.n = n;
+      }
+      search(){
+        var i;
+        for(i = 0; i < this.n; i++){
+          if(this.arr[i] == this.x) {
+              console.log(i);
+              return i;
+          }
+        }
+        return -1;
+      }
+    }
+
   
-var myColumn = new Column(10, 2, 2, 6, 1, 10, 3);
+var scenarioA = new Column(10, 2, 2, 6, 1, 10, floorWhereRequestWasMade);
 var myElevator = new Elevator(10, 1, 1, 7);
 var myGoTo = new GoTo(5);
-var value = myColumn.createButtonList();
-var bigMac = myColumn.createPanelList();
+var arr = [1,10,30,15];
+var love = arr.length;
+var myFindBestElevator = new FindBestElevator(arr, love, 30);
+var nuggets = myFindBestElevator.search();
+
+var value = scenarioA.createButtonList();
+var bigMac = scenarioA.createPanelList();
 var mcPoulet = myGoTo.commencerLeProgramme();
 var first = value.boy;
 var second = value.girl;
-  
 
 document.getElementById("demo2").innerHTML = first;
 document.getElementById("demo3").innerHTML = second;
 document.getElementById("demo4").innerHTML = bigMac;
+document.getElementById("demo9").innerHTML = nuggets;
 
 </script>
   <!-- jQuery first, then Popper.js, then Bootstrap JS -->
