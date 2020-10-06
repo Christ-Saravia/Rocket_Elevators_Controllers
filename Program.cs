@@ -154,9 +154,6 @@ namespace src
             
 
             Battery myObj = new Battery(num_floor, basement, columns, cages);
-            Console.WriteLine(myObj.basements);
-            Console.WriteLine(myObj.numfloor);
-            Console.WriteLine(myObj.cage);
         }
             
     }
