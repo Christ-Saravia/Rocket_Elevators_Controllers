@@ -16,11 +16,11 @@ namespace src
             colonne = _columns;
             cage = _cages;
 
-            string[] columnList = new string[colonne];
+            int[] columnList = new int[colonne];
             int[,] elevatorList = new int[colonne,cage];
 
             for(int i = 0; i < colonne; i++){
-                columnList.SetValue("A", i);
+                columnList.SetValue(i+1, i);
                 Console.WriteLine( "[Colonne]:   {0}", columnList.GetValue( i ));
                 for(int e = 0; e < cage; e++){
                     elevatorList.SetValue(e+1, i, e);
