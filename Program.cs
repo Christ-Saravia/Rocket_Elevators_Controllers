@@ -16,12 +16,11 @@ namespace src
             colonne = _columns;
             cage = _cages;
 
-            int[] columnList = new int[colonne];
+            Column myObjectColumn = new Column(colonne);
+
             int[,] elevatorList = new int[colonne,cage];
 
             for(int i = 0; i < colonne; i++){
-                columnList.SetValue(i+1, i);
-                Console.WriteLine( "[Colonne]:   {0}", columnList.GetValue(i));
                 for(int e = 0; e < cage; e++){
                     elevatorList.SetValue(e+1, i, e);
                     Console.WriteLine("[Ascenseur]: {0}", elevatorList.GetValue(i,e));         
@@ -31,12 +30,39 @@ namespace src
     }
     class Column
     {
-        public string size = "grand";
+        public int colonne;
+        public Column(int _columns)
+        {
+            colonne = _columns;
+            int[] colonneListe = new int[colonne];
+            for(int i= 0; i < colonne; i++){
+                colonneListe.SetValue(i+1, i);
+                Console.WriteLine( "[Colonne]:   {0}", colonneListe.GetValue(i));
+            }
+        }
+        
     }
 
     class Elevator
     {
-        public string emotion = "heureux";
+        public int colonne;
+        public int cage;
+        public Elevator(int _columns, int _cages)
+        {
+            int[,] elevatorList = new int[colonne,cage];
+            for(int i = 0; i < colonne; i++)
+            {
+                for(int e = 0; e < cage; e++){
+                elevatorList.SetValue(e+1, i, e);
+                Console.WriteLine("[Ascenseur]: {0}", elevatorList.GetValue(i,e));         
+            }  
+
+        }   
+
+            
+
+
+     
     }
 
     class Doors
@@ -157,4 +183,5 @@ namespace src
         }
             
     }
+}
 }
