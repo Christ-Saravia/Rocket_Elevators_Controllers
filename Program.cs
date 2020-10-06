@@ -20,8 +20,8 @@ namespace src
             int[,] elevatorList = new int[colonne,cage];
 
             for(int i = 0; i < colonne; i++){    
-                columnList.SetValue("A", i, i);
-                Console.WriteLine("[1,3]: {0}", columnList.GetValue(i,i));
+                elevatorList.SetValue("A", i, i+1);
+                Console.WriteLine("[1,3]: {0}", elevatorList.GetValue(i,i));
                 for(int e = 0; e < cage; e++){
                    
                 }            
