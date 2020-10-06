@@ -16,13 +16,17 @@ namespace src
             colonne = _columns;
             cage = _cages;
 
-            int[] columnList = new int[colonne];
+            string[] columnList = new string[colonne];
             int[,] elevatorList = new int[colonne,cage];
 
-            for(int i = 0; i < colonne; i++){    
-                elevatorList.SetValue("A", i, i+1);
-                Console.WriteLine("[1,3]: {0}", elevatorList.GetValue(i,i));
+            for(int i = 0; i < colonne; i++){
+                columnList.SetValue("A", i);
+                Console.WriteLine( "[Colonne]:   {0}", columnList.GetValue( i ) );
+                //elevatorList.SetValue(1, i, i+1);
+               // Console.WriteLine("[1,3]: {0}", elevatorList.GetValue(i,i));
                 for(int e = 0; e < cage; e++){
+                    elevatorList.SetValue(e+1, i, e);
+                    Console.WriteLine("[Ascenseur]: {0}", columnList.GetValue(i,e));  
                    
                 }            
             }
