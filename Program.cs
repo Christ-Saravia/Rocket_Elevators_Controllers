@@ -2,77 +2,157 @@
 
 namespace src
 {
-    class Program
+    class Battery
     {
-        static void Column(int num_elevator)
+        public int numfloor;
+        public int basements;
+        public int colonne;
+        public int cage;
+
+        public Battery(int _num_floor, int _basement, int _columns, int _cages)
         {
-            static void createElevatorList(int elevatorNumber)
-            {
-                int[] elevatorIdList;
-                int n = elevatorNumber;
-                elevatorIdList = new int[n];
+            numfloor = _num_floor;
+            basements = _basement;
+            colonne = _columns;
+            cage = _cages;
 
-                for (int i = 0; i < n; i++)
-                {
-                    elevatorIdList[i]= i + 1;
-                }
-                foreach(var item in elevatorIdList)
-                {
-                    Console.WriteLine(item.ToString());
-                }
+            int[] columnList = new int[colonne];
+            int[,] elevatorList = new int[colonne,cage];
 
+            for(int i = 0; i < colonne; i++){    
+                columnList.SetValue("A", i, i);
+                Console.WriteLine("[1,3]: {0}", columnList.GetValue(i,i));
+                for(int e = 0; e < cage; e++){
+                   
+                }            
             }
-            createElevatorList(num_elevator);
-
         }
-        static void Elevator(int num_floor, int num_elevator, int requestedFloor)
+    }
+    class Column
+    {
+        public string size = "grand";
+    }
+
+    class Elevator
+    {
+        public string emotion = "heureux";
+    }
+
+    class Doors
+    {
+        public string sport = "hockey";
+    }
+    class Display
+    {
+        public string ville = "Montreal";
+    }
+    class Program
+    {   
+        enum CommercialBuilding
         {
-            static void requestElevator(int floorNumber)
-            {
-                Console.WriteLine(floorNumber);
-            }
-            static void AssignElevator(int requestedFloor)
-            {
-                Console.WriteLine(requestedFloor);
-            }
-            requestElevator(num_floor);
-            AssignElevator(requestedFloor);sl
-
+            NumberOfFloor = 66,      
+            Basement = 6,           
+            Columns = 4,            
+            Cages = 5,                      
         }
-        static void Doors(int num_floor, int num_elevator)
+
+        enum SectionEtageCouvertA
         {
-            Console.WriteLine("Doors just got collected:" + num_elevator +"-"+ num_floor);
+            L,
+            B1,
+            B2,
+            B3,
+            B4,
+            B5,
+            B6,
+
         }
-        static void Button(int num_floor, int num_elevator)
+        enum SectionEtageCouvertB
         {
-            Console.WriteLine("Button just got collected:" + num_elevator +"-"+ num_floor);
+            L,
+            L2,
+            L3,
+            L4,
+            L5,
+            L6,
+            L7,
+            L8,
+            L9,
+            L10,
+            L11,
+            L12,
+            L13,
+            L14,
+            L15,
+            L16,
+            L17,
+            L18,
+            L19,
+            L20,
         }
-        static void Display(int num_floor, int num_elevator)
+
+        enum SectionEtageCouvertC
         {
-            Console.WriteLine("Display just got collected:" + num_elevator +"-"+ num_floor);
+            L,
+            L21,
+            L22,
+            L23,
+            L24,
+            L25,
+            L26,
+            L27,
+            L28,
+            L29,
+            L30,
+            L31,
+            L32,
+            L33,
+            L34,
+            L35,
+            L36,
+            L37,
+            L38,
+            L39,
+            L40
         }
-        static void Battery(int num_floor, int num_elevator)
+        enum SectionEtageCouvertD
         {
-            Console.WriteLine("Battery just got collected:" + num_elevator +"-"+ num_floor);
+            L,
+            L41,
+            L42,
+            L43,
+            L44,
+            L45,
+            L46,
+            L47,
+            L48,
+            L49,
+            L50,
+            L51,
+            L52,
+            L53,
+            L54,
+            L55,
+            L56,
+            L57,
+            L58,
+            L59,
+            L60,
         }
-
-
-
-
         static void Main(string[] args)
         {
-            int num_floor = 10;
-            int num_elevator = 10;
-            int requestedFloor = 60;
+            sbyte num_floor = (sbyte) CommercialBuilding.NumberOfFloor;
+            sbyte basement = (sbyte) CommercialBuilding.Basement;
+            sbyte columns = (sbyte) CommercialBuilding.Columns;
+            sbyte cages = (sbyte) CommercialBuilding.Cages;
 
-            Column(num_elevator);
-            Elevator(num_floor,num_elevator, requestedFloor);
-            Doors(num_floor, num_elevator);
-            Button(num_floor, num_elevator);
-            Display(num_floor, num_elevator);
-            Battery(num_floor, num_elevator);
+            
 
-
+            Battery myObj = new Battery(num_floor, basement, columns, cages);
+            Console.WriteLine(myObj.basements);
+            Console.WriteLine(myObj.numfloor);
+            Console.WriteLine(myObj.cage);
         }
+            
     }
 }
