@@ -4,6 +4,7 @@ DÉFINIR LES BESOINS:
     -Column
     -Elevator
     -CallButtons
+    -Display   //Seulement si j'ai le temps
 
 DÉFINIR LES MEMBRES APPROPRIÉS
     >Battery:
@@ -12,7 +13,15 @@ DÉFINIR LES MEMBRES APPROPRIÉS
         -DistanceToTravel()
         -UpdatingMyList()
         -Move()
-    >
+    >Column
+        -CreateFloorList()
+        -CreateElevatorList()
+    >Elevator:
+        -CreateElevator()
+    
+    >CallButtons:
+        -CreateCallButtons()
+
 */
 
 using System;
