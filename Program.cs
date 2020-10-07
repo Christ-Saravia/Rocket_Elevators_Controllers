@@ -11,60 +11,82 @@ namespace src
 
         public Battery(int _num_floor, int _basement, int _columns, int _cages)
         {
-            numfloor = _num_floor;
-            basements = _basement;
-            colonne = _columns;
-            cage = _cages;
+            this.numfloor = _num_floor;
+            this.basements = _basement;
+            this.colonne = _columns;
+            this.cage = _cages;
+        }
 
-            Column myObjectColumn = new Column(colonne);
+/*
+Pour mon controleur j'ai decide d'adopte l"approche moderne
+    Ma methode RequestElevator servira lors de la demande d'ascenseur
+        sur un etage ou un sous-sol
+*/
+        public void RequestElevator()
+        {
+            Console.WriteLine("IMPORTANT POUR EVALUATION");
+        }
 
-            int[,] elevatorList = new int[colonne,cage];
+/*
+    Ma methode servira pour les demandes faites au 1er etage
+*/
+        public void AssignElevator()
+        {
+            Console.WriteLine("IMPORTANT POUR EVALUATION");
+        }
 
-            for(int i = 0; i < colonne; i++){
-                for(int e = 0; e < cage; e++){
-                    elevatorList.SetValue(e+1, i, e);
-                    Console.WriteLine("[Ascenseur]: {0}", elevatorList.GetValue(i,e));         
-                }            
-            }
+/*
+    Ma methode permettra d'evaluer le nombre d'etage a parcourir
+    pour atteindre la destination
+*/
+        public void DistanceToTravel()
+        {
+
+        }
+
+/*
+    Ma methode permettra de faire un suivi de l'interaction des listes.
+*/
+
+        public void UpdatingMyLists()
+        {
+
+        }
+
+/*
+    Ici un peu comme mon code de residentiel en python, je vais faire bouger les ascenseurs selon la direction 
+*/
+        public void Move()
+        {
+
         }
     }
+
+/*
+Cette class va me permettre de creer ma liste de floor, elevator, callButton tel que dans mon residentiel en python
+*/
     class Column
     {
-        public int colonne;
-        public Column(int _columns)
+        public Column()
         {
-            colonne = _columns;
-            int[] colonneListe = new int[colonne];
-            for(int i= 0; i < colonne; i++){
-                colonneListe.SetValue(i+1, i);
-                Console.WriteLine( "[Colonne]:   {0}", colonneListe.GetValue(i));
-            }
-        }
-        
+
+        }    
     }
 
+/*
+Cette class va me permettre ...
+*/
     class Elevator
     {
-        public int colonne;
-        public int cage;
-        public Elevator(int _columns, int _cages)
+        public Elevator()
         {
-            int[,] elevatorList = new int[colonne,cage];
-            for(int i = 0; i < colonne; i++)
-            {
-                for(int e = 0; e < cage; e++){
-                elevatorList.SetValue(e+1, i, e);
-                Console.WriteLine("[Ascenseur]: {0}", elevatorList.GetValue(i,e));         
-            }  
 
-        }   
-
-            
-
-
-     
+        }
     }
-
+/*
+Cette class va permettre de changer le status des portes.
+Idealement, je voudrai permettre de donner un temps pour que les gens rentrent dans l'ascenseur avant la fermeture des portes 
+*/
     class Doors
     {
         enum actionDoors
@@ -73,9 +95,20 @@ namespace src
             OPENED,
         }
     }
+
+/* 
+le controleur prend en charge cet evenement
+Evenement 1: En appuyant ce bouton d'appel, la personne demande un ascenseur.
+*/
+    class CallButton
+    {
+        public CallButton()
+        {
+
+        }
+    }
     class Display
     {
-        public string ville = "Montreal";
     }
     class Program
     {   
@@ -172,16 +205,20 @@ namespace src
         }
         static void Main(string[] args)
         {
-            sbyte num_floor = (sbyte) CommercialBuilding.NumberOfFloor;
-            sbyte basement = (sbyte) CommercialBuilding.Basement;
-            sbyte columns = (sbyte) CommercialBuilding.Columns;
-            sbyte cages = (sbyte) CommercialBuilding.Cages;
+            int num_floor = (int) CommercialBuilding.NumberOfFloor;
+            int basement = (int) CommercialBuilding.Basement;
+            int columns = (int) CommercialBuilding.Columns;
+            int cages = (int) CommercialBuilding.Cages;
 
             
 
-            Battery myObj = new Battery(num_floor, basement, columns, cages);
+            Console.WriteLine(num_floor);
+            Console.WriteLine(basement);
+            Console.WriteLine(columns);
+            Console.WriteLine(cages);
+
+
         }
             
     }
-}
 }
