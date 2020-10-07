@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
+
 
 namespace src
 {
@@ -21,6 +21,16 @@ namespace src
             this.colonne = _columns;
             this.cage = _cages;
             int lieuAppel = 2;
+            int x = 1;
+
+            while( x <= this.colonne)
+            {
+                if (x == 1)
+                {
+                    Column myColumn = new Column(1, -basements, _cages);
+                    this.columnList.Add(myColumn);
+                }
+            }
             Console.WriteLine(lieuAppel);
 
 
@@ -79,11 +89,20 @@ Cette class va me permettre de creer ma liste de floor, elevator, callButton tel
         public List<Elevator> elevatorList = new List<Elevator>();
         public List<int> listeEtage = new List<int>();
         public List<CallButton> callButtonList = new List<CallButton>();
+
         public int identification;
 
-        public Column(int identification, int lieuAppel, int num)
+        public Column(int identification, int lieuAppel, int _cages)
         {
+            this.identification = identification;
+            this.listeEtage.Add(1);
 
+            for(int i = lieuAppel; i <= _cages; i++)
+            {
+                this.listeEtage.Add(1);
+            }
+
+            
         }    
     }
 
