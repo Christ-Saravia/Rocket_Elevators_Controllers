@@ -22,14 +22,44 @@ namespace src
             this.cage = _cages;
             int lieuAppel = 2;
             int x = 1;
+            int moyFloorColonne = this.numfloor/(this.colonne -1);
+            string colonneActuel;
 
             while( x <= this.colonne)
             {
-                if (x == 1)
-                {
-                    Column myColumn = new Column(1, -basements, _cages);
-                    this.columnList.Add(myColumn);
+                if(x == 1){
+                    colonneActuel = "A";
                 }
+                else if(x < this.colonne){
+                    colonneActuel = "B";
+                }
+                else{
+                    colonneActuel= "C";
+                }                
+                
+                switch(colonneActuel){
+                    case "A":
+                    Console.WriteLine("Bonjour");
+                    Column myColumn = new Column(1, _basement, _num_floor);
+                    this.columnList.Add(myColumn);
+                    break;  
+                    case "B":
+                    Console.WriteLine("Hi!");
+                    Column myColumn2 = new Column(x, lieuAppel,_cages);
+                    this.columnList.Add(myColumn2);
+                    lieuAppel = moyFloorColonne + 1;
+                    moyFloorColonne += this.numfloor/(this.colonne -1);
+                    break;
+                    case "C":
+                    Column myColumn3 = new Column(x, lieuAppel, _cages);
+                    this.columnList.Add(myColumn3);
+                    Console.WriteLine("Buenos Dias");
+                    break;
+                    default:
+                    Console.WriteLine("ボンジュール");                      // Je dois reflechir pour mon default dans mo switch
+                    break;
+                }
+                var n = x+1;
             }
             Console.WriteLine(lieuAppel);
 
