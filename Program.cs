@@ -1,13 +1,18 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace src
 {
     class Battery
     {
+        public List<Column> columnList = new List<Column>();
         public int numfloor;
         public int basements;
         public int colonne;
         public int cage;
+
+
 
         public Battery(int _num_floor, int _basement, int _columns, int _cages)
         {
@@ -15,6 +20,10 @@ namespace src
             this.basements = _basement;
             this.colonne = _columns;
             this.cage = _cages;
+            int lieuAppel = 2;
+            Console.WriteLine(lieuAppel);
+
+
         }
 
 /*
@@ -67,7 +76,12 @@ Cette class va me permettre de creer ma liste de floor, elevator, callButton tel
 */
     class Column
     {
-        public Column()
+        public List<Elevator> elevatorList = new List<Elevator>();
+        public List<int> listeEtage = new List<int>();
+        public List<CallButton> callButtonList = new List<CallButton>();
+        public int identification;
+
+        public Column(int identification, int lieuAppel, int num)
         {
 
         }    
@@ -78,9 +92,29 @@ Cette class va me permettre de construire mes ascenseurs
 */
     class Elevator
     {
-        public Elevator()
-        {
+        //List
+        public List<int> listeEtage = new List<int>();
+        public List<int> whereToEndList = new List<int>();
+        public List<int> checkList = new List<int>();
 
+        public int identification;
+        public int position = 1;
+        public string direction = "UP";
+
+        public string actionDoors = "CLOSED";
+
+        public string checkListDirection = "UP";
+
+
+
+        public Elevator(int identification, int numfloor, int lieuAppel)
+        {
+            this.identification = identification;
+
+            for(int i = lieuAppel; i <= numfloor; i = i + 1)
+            {
+                this.listeEtage.Add(i);
+            }
         }
     }
 /*
@@ -102,9 +136,12 @@ Evenement 1: En appuyant ce bouton d'appel, la personne demande un ascenseur.
 */
     class CallButton
     {
-        public CallButton()
+        public int Etage;
+        public string Direction;
+        public CallButton(int _etage , string _direction)
         {
-
+            this.Direction = _direction;
+            this.Etage = _etage;
         }
     }
     class Display
@@ -209,9 +246,7 @@ Evenement 1: En appuyant ce bouton d'appel, la personne demande un ascenseur.
             int basement = (int) CommercialBuilding.Basement;
             int columns = (int) CommercialBuilding.Columns;
             int cages = (int) CommercialBuilding.Cages;
-
-            
-
+         
             Console.WriteLine(num_floor);
             Console.WriteLine(basement);
             Console.WriteLine(columns);
