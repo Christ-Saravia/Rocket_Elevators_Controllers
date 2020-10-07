@@ -1,4 +1,21 @@
-﻿using System;
+﻿/*
+DÉFINIR LES BESOINS:
+    -Battery
+    -Column
+    -Elevator
+    -CallButtons
+
+DÉFINIR LES MEMBRES APPROPRIÉS
+    >Battery:
+        -RequestElevator()
+        -AssignElevator()
+        -DistanceToTravel()
+        -UpdatingMyList()
+        -Move()
+    >
+*/
+
+using System;
 using System.Collections.Generic;
 
 
@@ -71,10 +88,22 @@ Pour mon controleur j'ai decide d'adopte l"approche moderne
     Ma methode RequestElevator servira lors de la demande d'ascenseur
         sur un etage ou un sous-sol
 */
-        public void RequestElevator()
+        public void RequestElevator(int _num_floor)
         {
+            this.numfloor = _num_floor;
+
+            Column currentColumn = this.columnList[0];
+            foreach(var item in this.columnList)
+            {
+                if (numfloor >= item.listeEtage[1])
+                {
+                    currentColumn = item;
+                    break;
+                }
+            }
             Console.WriteLine("IMPORTANT POUR EVALUATION");
         }
+        string direction;
 
 /*
     Ma methode servira pour les demandes faites au 1er etage
