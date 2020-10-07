@@ -74,7 +74,7 @@ Cette class va me permettre de creer ma liste de floor, elevator, callButton tel
     }
 
 /*
-Cette class va me permettre ...
+Cette class va me permettre de construire mes ascenseurs
 */
     class Elevator
     {
