@@ -110,7 +110,7 @@ namespace src
                     callButonList.Add(myCallButton);
                 }
             }
-            Console.WriteLine("ColumnID: " + this.identification.ToString() + " sopports these floors: " + string.Join(" | ", floorList));
+            Console.WriteLine("ColumnID: " + this.identification.ToString() + " supports these floors: " + string.Join(" | ", floorList));
         }
     }
     class Battery
@@ -620,7 +620,11 @@ namespace src
     {
         static void Main(string[] args)
         {
-
+            int myNumOfFloor = (int)CommercialBuilding.NumberOfFloor;
+            int myBasement = (int)CommercialBuilding.Basement;
+            int myColumns = (int)CommercialBuilding.Columns;
+            int myCages =(int)CommercialBuilding.Cages; 
+            Battery myBattery = new Battery(myColumns,myNumOfFloor,myBasement,myCages);
         }
     }
 }
