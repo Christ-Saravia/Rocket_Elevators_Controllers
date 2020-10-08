@@ -5,7 +5,6 @@ DÉFINIR LES BESOINS:
     -Elevator
     -CallButtons
     -Display   //Seulement si j'ai le temps
-
 DÉFINIR LES MEMBRES APPROPRIÉS
     >Battery:
         -RequestElevator()
@@ -21,221 +20,511 @@ DÉFINIR LES MEMBRES APPROPRIÉS
     
     >CallButtons:
         -CreateCallButtons()
-
 */
-
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 
 namespace src
 {
-    class Battery
+
+    class CallButton
     {
-        public List<Column> columnList = new List<Column>();
-        public int numfloor;
-        public int basements;
-        public int colonne;
-        public int cage;
+        public string direction;
+        public int floor;
 
 
-        
-        public Battery(int _num_floor, int _basement, int _columns, int _cages)
+
+        public CallButton(string _direction, int _floor)
         {
-            this.numfloor = _num_floor;
-            this.basements = _basement;
-            this.colonne = _columns;
-            this.cage = _cages;
-            int lieuAppel = 2;
-            int x = 1;
-            int moyFloorColonne = this.numfloor/(this.colonne -1);
-            string colonneActuel;
-
-            while( x <= this.colonne)
-            {
-                if(x == 1){
-                    colonneActuel = "A";
-                }
-                else if(x < this.colonne){
-                    colonneActuel = "B";
-                }
-                else{
-                    colonneActuel= "C";
-                }                
-                
-                switch(colonneActuel){
-                    case "A":
-                    Console.WriteLine("Bonjour");
-                    Column myColumn = new Column(1, _basement, _num_floor);
-                    this.columnList.Add(myColumn);
-                    break;  
-                    case "B":
-                    Console.WriteLine("Hi!");
-                    Column myColumn2 = new Column(x, lieuAppel,_cages);
-                    this.columnList.Add(myColumn2);
-                    lieuAppel = moyFloorColonne + 1;
-                    moyFloorColonne += this.numfloor/(this.colonne -1);
-                    break;
-                    case "C":
-                    Column myColumn3 = new Column(x, lieuAppel, _cages);
-                    this.columnList.Add(myColumn3);
-                    Console.WriteLine("Buenos Dias");
-                    break;
-                    default:
-                    Console.WriteLine("ボンジュール");                      // Je dois reflechir pour mon default dans mo switch
-                    break;
-                }
-                var n = x+1;
-            }
-            Console.WriteLine(lieuAppel);
-
+            direction = _direction;
+            floor = _floor;
 
         }
 
-/*
-Pour mon controleur j'ai decide d'adopte l"approche moderne
-    Ma methode RequestElevator servira lors de la demande d'ascenseur
-        sur un etage ou un sous-sol
-*/
-        public void RequestElevator(int _num_floor)
-        {
-            this.numfloor = _num_floor;
+    }
 
-            Column currentColumn = this.columnList[0];
-            foreach(var item in this.columnList)
+    class Elevator
+    {
+        public int identification;
+        public int position = 1;
+        public string direction = "UP";
+        public List<int> StopList = new List<int>();
+        public List<int> floorList = new List<int>();
+        public string Door = "CLOSED";
+        public string BufferDirection = "UP";
+        public List<int> BufferList = new List<int>();
+
+
+        public Elevator(int identification, int etageAppel, int etageEnd)
+        {
+            this.identification = identification;
+            for (int i = etageAppel; i <= etageEnd; i = i + 1)
             {
-                if (numfloor >= item.listeEtage[1])
+                floorList.Add(i);
+            }
+        }
+    }
+
+    /*
+    Cette class va me permettre de creer ma liste de floor, elevator, callButton tel que dans mon residentiel en python
+    */
+    class Column
+    {
+        public int identification;
+        public List<Elevator> elevatorList = new List<Elevator>();
+        public List<int> floorList = new List<int>();
+        public List<CallButton> callButonList = new List<CallButton>();
+
+
+        public Column(int identification, int etageAppel, int etageEnd, int numberOfElevators)
+        {
+            this.identification = identification;
+            floorList.Add(1);
+
+            for (int i = etageAppel; i <= etageEnd; i = i + 1)
+            {
+                floorList.Add(i);
+            }
+
+
+            for (int i = 1; i <= numberOfElevators; i = i + 1)
+            {
+                elevatorList.Add(new Elevator(i, etageAppel, etageEnd));
+            }
+
+            if (identification == 1)
+            {
+                for (int i = etageEnd; i <= etageAppel; i = i + 1)
+                {
+                    CallButton myCallButton = new CallButton("UP", i);
+                    callButonList.Add(myCallButton);
+                }
+            }
+            else
+            {
+                for (int i = etageAppel; i <= etageEnd; i = i + 1)
+                {
+                    CallButton myCallButton = new CallButton("DOWN", i);
+                    callButonList.Add(myCallButton);
+                }
+            }
+            Console.WriteLine("ColumnID: " + this.identification.ToString() + " sopports these floors: " + string.Join(" | ", floorList));
+        }
+    }
+    class Battery
+    {
+        public List<Column> columnList = new List<Column>();
+
+
+        public Battery(int numberOfColumns, int num_floors, int basement, int nombreAscenseurColonne)
+        {
+
+
+            double nbFloors = (num_floors - basement);
+            int moyEtageColonne = (int)Math.Floor(nbFloors / (numberOfColumns - 1));
+            int etageAppel = 2;
+            int etageEnd = moyEtageColonne;
+            int identificationColonneActuel = 1;
+            while (identificationColonneActuel <= numberOfColumns)
+            {
+
+                if (identificationColonneActuel == 1)
+                {
+                    Column column = new Column(1, -basement, -1, nombreAscenseurColonne);
+                    columnList.Add(column);
+                }
+
+                else if (identificationColonneActuel < numberOfColumns)
+                {
+                    Column column = new Column(identificationColonneActuel, etageAppel, etageEnd, nombreAscenseurColonne);
+                    columnList.Add(column);
+                    etageAppel = etageEnd + 1;
+                    etageEnd = etageEnd + moyEtageColonne;
+                }
+                else
+                {
+                    Column column = new Column(identificationColonneActuel, etageAppel, (int)nbFloors, nombreAscenseurColonne);
+                    columnList.Add(column);
+                }
+                identificationColonneActuel = identificationColonneActuel + 1;
+            }
+
+        }
+
+        public void RequestElevator(int floorNumber)
+        {
+
+            Column currentColumn = columnList[0];
+            foreach (var item in columnList)
+            {
+                if (floorNumber >= item.floorList[1] && floorNumber <= item.floorList.Last())
                 {
                     currentColumn = item;
                     break;
                 }
             }
-            Console.WriteLine("IMPORTANT POUR EVALUATION");
-        }
-        string direction;
 
-/*
-    Ma methode servira pour les demandes faites au 1er etage
-*/
-        public void AssignElevator()
-        {
-            Console.WriteLine("IMPORTANT POUR EVALUATION");
-        }
-
-/*
-    Ma methode permettra d'evaluer le nombre d'etage a parcourir
-    pour atteindre la destination
-*/
-        public void DistanceToTravel()
-        {
-
-        }
-
-/*
-    Ma methode permettra de faire un suivi de l'interaction des listes.
-*/
-
-        public void UpdatingMyLists()
-        {
-
-        }
-
-/*
-    Ici un peu comme mon code de residentiel en python, je vais faire bouger les ascenseurs selon la direction 
-*/
-        public void Move()
-        {
-
-        }
-    }
-
-/*
-Cette class va me permettre de creer ma liste de floor, elevator, callButton tel que dans mon residentiel en python
-*/
-    class Column
-    {
-        public List<Elevator> elevatorList = new List<Elevator>();
-        public List<int> listeEtage = new List<int>();
-        public List<CallButton> callButtonList = new List<CallButton>();
-
-        public int identification;
-
-        public Column(int identification, int lieuAppel, int _cages)
-        {
-            this.identification = identification;
-            this.listeEtage.Add(1);
-
-            for(int i = lieuAppel; i <= _cages; i++)
+            string direction;
+            if (floorNumber < 1)
             {
-                this.listeEtage.Add(1);
+                direction = "UP";
+            }
+            else
+            {
+                direction = "DOWN";
+            }
+            Console.WriteLine("Serving culomn:  columnID {0} from floor {1} to floor {2}", currentColumn.identification, currentColumn.floorList[1], currentColumn.floorList.Last());
+
+            int DistanceToGo = 1000;
+            int distance;
+            List<Elevator> priority1 = new List<Elevator>();
+            List<Elevator> priority2 = new List<Elevator>();
+            List<Elevator> priority3 = new List<Elevator>();
+            Elevator BestElevator = currentColumn.elevatorList[0];
+            foreach (Elevator myElevator in currentColumn.elevatorList)
+            {
+                int currentDestination;
+                if (myElevator.direction == "IDLE")
+                {
+                    currentDestination = 0;
+                }
+                else
+                {
+                    currentDestination = myElevator.StopList.Last();
+                }
+                Console.Write("111elID = {0}, elPos = {1}, elDir = {2}, current Destination = {3}", myElevator.identification, myElevator.position, myElevator.direction, currentDestination);
+                distance = TravelDistance(myElevator, floorNumber, direction);
+                Console.WriteLine(". distanceToGo: {0}", distance);
+                if (myElevator.direction == direction)
+                {
+                    if ((direction == "UP" && myElevator.position <= floorNumber) | (direction == "DOWN" && myElevator.position >= floorNumber))
+                    {
+                        priority1.Add(myElevator);
+                    }
+                }
+                else if (myElevator.direction == "IDLE")
+                {
+                    priority2.Add(myElevator);
+                }
+                else
+                {
+                    priority3.Add(myElevator);
+                }
+            }
+            if (priority1.Count > 0)
+            {
+                foreach (Elevator myElevator in priority1)
+                {
+                    distance = TravelDistance(myElevator, floorNumber, direction);
+
+                    if (distance <= DistanceToGo)
+                    {
+                        DistanceToGo = distance;
+                        BestElevator = myElevator;
+                    }
+                }
+            }
+            else if (priority2.Count > 0)
+            {
+                foreach (Elevator myElevator in priority2)
+                {
+                    distance = TravelDistance(myElevator, floorNumber, direction);
+
+                    if (distance <= DistanceToGo)
+                    {
+                        DistanceToGo = distance;
+                        BestElevator = myElevator;
+                    }
+                }
+            }
+            else
+            {
+                foreach (Elevator myElevator in priority3)
+                {
+                    distance = TravelDistance(myElevator, floorNumber, direction);
+
+                    if (distance <= DistanceToGo)
+                    {
+                        DistanceToGo = distance;
+                        BestElevator = myElevator;
+                    }
+                }
             }
 
-            
-        }    
-    }
-
-/*
-Cette class va me permettre de construire mes ascenseurs
-*/
-    class Elevator
-    {
-        //List
-        public List<int> listeEtage = new List<int>();
-        public List<int> whereToEndList = new List<int>();
-        public List<int> checkList = new List<int>();
-
-        public int identification;
-        public int position = 1;
-        public string direction = "UP";
-
-        public string actionDoors = "CLOSED";
-
-        public string checkListDirection = "UP";
-
-
-
-        public Elevator(int identification, int numfloor, int lieuAppel)
-        {
-            this.identification = identification;
-
-            for(int i = lieuAppel; i <= numfloor; i = i + 1)
+            if (BestElevator.direction == direction | BestElevator.direction == "IDLE")
             {
-                this.listeEtage.Add(i);
+                if (BestElevator.direction == "DOWN" && BestElevator.position >= floorNumber)
+                {
+                    Console.Write(" Take column {0} ElevatorID: {1} which is currently at floor {2}. ", currentColumn.identification, BestElevator.identification, BestElevator.position);
+                    UpdateList(BestElevator, BestElevator.StopList, floorNumber);
+                    UpdateList(BestElevator, BestElevator.StopList, 1);
+                    Console.WriteLine(" StopList: [ " + string.Join(" | ", BestElevator.StopList) + " ]");
+
+                    move(BestElevator);
+                }
+                else if (BestElevator.direction == "UP" && BestElevator.position <= floorNumber)
+                {
+                    Console.Write(" Take column {0} ElevatorID: {1} which is currently at floor {2}. ", currentColumn.identification, BestElevator.identification, BestElevator.position);
+                    UpdateList(BestElevator, BestElevator.StopList, floorNumber);
+                    UpdateList(BestElevator, BestElevator.StopList, 1);
+                    Console.WriteLine(" StopList: [ " + string.Join(" | ", BestElevator.StopList) + " ]");
+
+                    move(BestElevator);
+                }
+                else if (BestElevator.direction == "IDLE")
+                {
+                    Console.Write(" Take ElevatorID: {0} which is currently at floor {1}. ", BestElevator.identification, BestElevator.position);
+                    UpdateList(BestElevator, BestElevator.StopList, floorNumber);
+                    UpdateList(BestElevator, BestElevator.StopList, 1);
+                    Console.WriteLine(" StopList: [ " + string.Join(" | ", BestElevator.StopList) + " ]");
+
+                    move(BestElevator);
+                }
+                else
+                {
+                    Console.Write(" Take ElevatorID: {0} which is currently at floor {1}. ", BestElevator.identification, BestElevator.position);
+                    UpdateList(BestElevator, BestElevator.BufferList, floorNumber);
+                    UpdateList(BestElevator, BestElevator.BufferList, 1);
+                    Console.Write(" StopList: [ " + string.Join(" | ", BestElevator.StopList) + " ]");
+                    Console.WriteLine(" BufferLsit: [ " + string.Join(" | ", BestElevator.BufferList) + " ]");
+
+                    if (floorNumber > 1)
+                    {
+                        BestElevator.BufferDirection = "DOWN";
+                        move(BestElevator);
+                    }
+                    else
+                    {
+                        BestElevator.BufferDirection = "UP";
+                        move(BestElevator);
+                    }
+                }
+            }
+            else
+            {
+                Console.Write(" Take ElevatorID: {0} which is currently at floor {1}. ", BestElevator.identification, BestElevator.position);
+                UpdateList(BestElevator, BestElevator.BufferList, floorNumber);
+                UpdateList(BestElevator, BestElevator.StopList, 1);
+                Console.Write(" StopList: [ " + string.Join(" | ", BestElevator.StopList) + " ]");
+                Console.WriteLine(" BufferLsit: [ " + string.Join(" | ", BestElevator.BufferList) + " ]");
+
+
+                if (floorNumber > 1)
+                {
+                    BestElevator.BufferDirection = "DOWN";
+                    move(BestElevator);
+                }
+
+                else
+                {
+                    BestElevator.BufferDirection = "UP";
+                    move(BestElevator);
+                }
+            }
+        }
+
+        /*
+            Ma methode servira pour les demandes faites au 1er etage
+        */
+        public void AssignElevator(int RequestedFloor)
+        {
+
+            Column currentColumn = columnList[0];
+            foreach (var item in columnList)
+            {
+
+                if (RequestedFloor >= item.floorList[1] && RequestedFloor <= item.floorList.Last())
+                {
+                    currentColumn = item;
+                    break;
+                }
+            }
+            Console.WriteLine("the column identification for floor {0} is {1}", RequestedFloor, currentColumn.identification);
+            int DistanceToGo = 1000;
+            Elevator BestElevator = currentColumn.elevatorList[0];
+            string userDirection;
+            if (RequestedFloor > 1)
+            {
+                userDirection = "UP";
+            }
+            else
+            {
+                userDirection = "DOWN";
+            }
+
+            foreach (Elevator elevator in currentColumn.elevatorList)
+            {
+                int currentDestination;
+                if (elevator.direction == "IDLE")
+                {
+                    currentDestination = 0;
+                }
+                else
+                {
+                    currentDestination = elevator.StopList.Last();
+                }
+                Console.Write("111elID = {0}, elPos = {1}, elDir = {2}, current Destination = {3}", elevator.identification, elevator.position, elevator.direction, currentDestination);
+
+                int distance = TravelDistance(elevator, 1, userDirection);
+                Console.WriteLine(". distanceToGo: {0}", distance);
+
+                if (distance <= DistanceToGo)
+                {
+                    DistanceToGo = distance;
+                    BestElevator = elevator;
+                }
+            }
+            Console.WriteLine("*** Take the column {0}, elevator {1} *** ", currentColumn.identification, BestElevator.identification);
+            if (BestElevator.position == 1)
+            {
+
+                UpdateList(BestElevator, BestElevator.StopList, RequestedFloor);
+            }
+            else
+            {
+
+                UpdateList(BestElevator, BestElevator.BufferList, RequestedFloor);
+
+                if (RequestedFloor > 1)
+                {
+                    BestElevator.BufferDirection = "DOWN";
+                }
+
+                else
+                {
+                    BestElevator.BufferDirection = "UP";
+                }
+            }
+            move(BestElevator);
+
+
+        }
+
+        /*
+            Ma methode permettra d'evaluer le nombre d'etage a parcourir
+            pour atteindre la destination
+        */
+        public int TravelDistance(Elevator elevator, int UserPosition, string userDirection)
+        {
+            if (elevator.direction != "IDLE" | elevator.StopList.Count != 0)
+            {
+                if (elevator.direction == userDirection)
+                {
+                    if (elevator.direction == "UP" && elevator.position <= UserPosition)
+                    {
+                        return Math.Abs(elevator.position - UserPosition);
+                    }
+                    else if (elevator.direction == "DOWN" && elevator.position >= UserPosition)
+                    {
+                        return Math.Abs(elevator.position - UserPosition);
+                    }
+                    else
+                    {
+                        return Math.Abs(elevator.StopList.Last() - elevator.position) + Math.Abs(elevator.StopList.Last() - UserPosition);
+                    }
+                }
+                else
+                {
+                    return Math.Abs(elevator.StopList.Last() - elevator.position) + Math.Abs(elevator.StopList.Last() - UserPosition); ;
+                }
+            }
+            else
+            {
+                return Math.Abs(elevator.position - UserPosition);
+            }
+        }
+
+        /*
+            Ma methode permettra de faire un suivi de l'interaction des listes.
+        */
+        public void UpdateList(Elevator elevator, List<int> List, int position)
+        {
+            bool check = true;
+            foreach (int stop in List)
+            {
+                if (stop == position)
+                {
+                    check = false;
+                }
+            }
+            if (check)
+            {
+                List.Add(position);
+                List.Sort();
+            }
+        }
+
+        /*
+            Ici un peu comme mon code de residentiel en python, je vais faire bouger les ascenseurs selon la direction 
+        */
+        public void move(Elevator elevator)
+        {
+            while (elevator.StopList.Count > 0)
+            {
+                if (elevator.StopList[0] > elevator.position)
+                {
+                    elevator.direction = "UP";
+                    while (elevator.position < elevator.StopList[0])
+                    {
+                        elevator.position += 1;
+                        if (elevator.position != 0)
+                        {
+                            Console.WriteLine("Elevator {0} is at floor {1} ", elevator.identification, elevator.position);
+                        }
+                        if (elevator.position == elevator.floorList.Last())
+                        {
+                            elevator.direction = "IDLE";
+                        }
+                    }
+                    elevator.Door = "OPENED";
+                    Console.WriteLine("Door is open");
+                    elevator.StopList.RemoveAt(0);
+                }
+                else
+                {
+                    elevator.direction = "DOWN";
+                    while (elevator.position > elevator.StopList.Last())
+                    {
+                        elevator.position -= 1;
+                        if (elevator.position != 0)
+                        {
+                            Console.WriteLine("Elevator {0} is at floor {1} ", elevator.identification, elevator.position);
+                        }
+                        if (elevator.position == elevator.floorList.First())
+                        {
+                            elevator.direction = "IDLE";
+                        }
+                    }
+                    elevator.Door = "OPENED";
+                    Console.WriteLine("Door opening...");
+                    Console.WriteLine("<DOOR OPEN>");
+                    elevator.StopList.RemoveAt(elevator.StopList.Count - 1);
+                }
+
+                elevator.Door = "CLOSED";
+                for(int i = 5; i > 0; --i){
+                    Console.WriteLine("Door is closing in " + i + "...");
+                }
+                
+                Console.WriteLine("<DOOR CLOSED>");
+                elevator.direction = "IDLE";
+            }
+            if (elevator.BufferList.Count > 0)
+            {
+                elevator.StopList = elevator.BufferList;
+                elevator.direction = elevator.BufferDirection;
+                move(elevator);
+            }
+            else
+            {
+                elevator.direction = "IDLE";
             }
         }
     }
-/*
-Cette class va permettre de changer le status des portes.
-Idealement, je voudrai permettre de donner un temps pour que les gens rentrent dans l'ascenseur avant la fermeture des portes 
-*/
-    class Doors
-    {
-        enum actionDoors
-        {
-            CLOSED,
-            OPENED,
-        }
-    }
 
-/* 
-le controleur prend en charge cet evenement
-Evenement 1: En appuyant ce bouton d'appel, la personne demande un ascenseur.
-*/
-    class CallButton
-    {
-        public int Etage;
-        public string Direction;
-        public CallButton(int _etage , string _direction)
-        {
-            this.Direction = _direction;
-            this.Etage = _etage;
-        }
-    }
-    class Display
-    {
-    }
-    class Program
-    {   
+    
         enum CommercialBuilding
         {
             NumberOfFloor = 66,      
@@ -327,20 +616,11 @@ Evenement 1: En appuyant ce bouton d'appel, la personne demande un ascenseur.
             L59,
             L60,
         }
+    class Program
+    {
         static void Main(string[] args)
         {
-            int num_floor = (int) CommercialBuilding.NumberOfFloor;
-            int basement = (int) CommercialBuilding.Basement;
-            int columns = (int) CommercialBuilding.Columns;
-            int cages = (int) CommercialBuilding.Cages;
-         
-            Console.WriteLine(num_floor);
-            Console.WriteLine(basement);
-            Console.WriteLine(columns);
-            Console.WriteLine(cages);
-
 
         }
-            
     }
 }
