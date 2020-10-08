@@ -39,7 +39,7 @@ namespace src
         public int cage;
 
 
-
+        
         public Battery(int _num_floor, int _basement, int _columns, int _cages)
         {
             this.numfloor = _num_floor;
