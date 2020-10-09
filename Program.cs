@@ -28,29 +28,23 @@ using System.Linq;
 
 namespace src
 {
-
     class CallButton
     {
         public string direction;
         public int floor;
 
-
-
         public CallButton(string _direction, int _floor)
         {
             direction = _direction;
             floor = _floor;
-
         }
-
     }
-
     class Elevator
     {
         public int identification;
         public int position = 1;
         public string direction = "UP";
-        public List<int> StopList = new List<int>();
+        public List<int> stopList = new List<int>();
         public List<int> floorList = new List<int>();
         public string Door = "CLOSED";
         public string BufferDirection = "UP";
@@ -76,27 +70,24 @@ namespace src
         public List<Elevator> elevatorList = new List<Elevator>();
         public List<int> floorList = new List<int>();
         public List<CallButton> callButonList = new List<CallButton>();
-
-
         public Column(int identification, int etageAppel, int etageEnd, int numberOfElevators)
         {
             this.identification = identification;
             floorList.Add(1);
 
-            for (int i = etageAppel; i <= etageEnd; i = i + 1)
+            for (int i = etageAppel; i <= etageEnd; i++)
             {
                 floorList.Add(i);
             }
 
-
-            for (int i = 1; i <= numberOfElevators; i = i + 1)
+            for (int i = 1; i <= numberOfElevators;i++)
             {
                 elevatorList.Add(new Elevator(i, etageAppel, etageEnd));
             }
 
             if (identification == 1)
             {
-                for (int i = etageEnd; i <= etageAppel; i = i + 1)
+                for (int i = etageEnd; i <= etageAppel; i++)
                 {
                     CallButton myCallButton = new CallButton("UP", i);
                     callButonList.Add(myCallButton);
@@ -104,7 +95,7 @@ namespace src
             }
             else
             {
-                for (int i = etageAppel; i <= etageEnd; i = i + 1)
+                for (int i = etageAppel; i <= etageEnd; i++)
                 {
                     CallButton myCallButton = new CallButton("DOWN", i);
                     callButonList.Add(myCallButton);
@@ -150,9 +141,7 @@ namespace src
                 }
                 identificationColonneActuel = identificationColonneActuel + 1;
             }
-
         }
-
         public void RequestElevator(int floorNumber)
         {
 
@@ -175,9 +164,9 @@ namespace src
             {
                 direction = "DOWN";
             }
-            Console.WriteLine("Serving culomn:  columnID {0} from floor {1} to floor {2}", currentColumn.identification, currentColumn.floorList[1], currentColumn.floorList.Last());
+            Console.WriteLine("Serving column:  columnID {0} from floor {1} to floor {2}", currentColumn.identification, currentColumn.floorList[1], currentColumn.floorList.Last());
 
-            int DistanceToGo = 1000;
+            int distanceToGo = 1000;
             int distance;
             List<Elevator> priority1 = new List<Elevator>();
             List<Elevator> priority2 = new List<Elevator>();
@@ -192,7 +181,7 @@ namespace src
                 }
                 else
                 {
-                    currentDestination = myElevator.StopList.Last();
+                    currentDestination = myElevator.stopList.Last();
                 }
                 Console.Write("111elID = {0}, elPos = {1}, elDir = {2}, current Destination = {3}", myElevator.identification, myElevator.position, myElevator.direction, currentDestination);
                 distance = TravelDistance(myElevator, floorNumber, direction);
@@ -219,9 +208,9 @@ namespace src
                 {
                     distance = TravelDistance(myElevator, floorNumber, direction);
 
-                    if (distance <= DistanceToGo)
+                    if (distance <= distanceToGo)
                     {
-                        DistanceToGo = distance;
+                        distanceToGo = distance;
                         BestElevator = myElevator;
                     }
                 }
@@ -232,9 +221,9 @@ namespace src
                 {
                     distance = TravelDistance(myElevator, floorNumber, direction);
 
-                    if (distance <= DistanceToGo)
+                    if (distance <= distanceToGo)
                     {
-                        DistanceToGo = distance;
+                        distanceToGo = distance;
                         BestElevator = myElevator;
                     }
                 }
@@ -245,9 +234,9 @@ namespace src
                 {
                     distance = TravelDistance(myElevator, floorNumber, direction);
 
-                    if (distance <= DistanceToGo)
+                    if (distance <= distanceToGo)
                     {
-                        DistanceToGo = distance;
+                        distanceToGo = distance;
                         BestElevator = myElevator;
                     }
                 }
@@ -258,27 +247,27 @@ namespace src
                 if (BestElevator.direction == "DOWN" && BestElevator.position >= floorNumber)
                 {
                     Console.Write(" Take column {0} ElevatorID: {1} which is currently at floor {2}. ", currentColumn.identification, BestElevator.identification, BestElevator.position);
-                    UpdateList(BestElevator, BestElevator.StopList, floorNumber);
-                    UpdateList(BestElevator, BestElevator.StopList, 1);
-                    Console.WriteLine(" StopList: [ " + string.Join(" | ", BestElevator.StopList) + " ]");
+                    UpdateList(BestElevator, BestElevator.stopList, floorNumber);
+                    UpdateList(BestElevator, BestElevator.stopList, 1);
+                    Console.WriteLine(" stopList: [ " + string.Join(" | ", BestElevator.stopList) + " ]");
 
                     move(BestElevator);
                 }
                 else if (BestElevator.direction == "UP" && BestElevator.position <= floorNumber)
                 {
                     Console.Write(" Take column {0} ElevatorID: {1} which is currently at floor {2}. ", currentColumn.identification, BestElevator.identification, BestElevator.position);
-                    UpdateList(BestElevator, BestElevator.StopList, floorNumber);
-                    UpdateList(BestElevator, BestElevator.StopList, 1);
-                    Console.WriteLine(" StopList: [ " + string.Join(" | ", BestElevator.StopList) + " ]");
+                    UpdateList(BestElevator, BestElevator.stopList, floorNumber);
+                    UpdateList(BestElevator, BestElevator.stopList, 1);
+                    Console.WriteLine(" stopList: [ " + string.Join(" | ", BestElevator.stopList) + " ]");
 
                     move(BestElevator);
                 }
                 else if (BestElevator.direction == "IDLE")
                 {
                     Console.Write(" Take ElevatorID: {0} which is currently at floor {1}. ", BestElevator.identification, BestElevator.position);
-                    UpdateList(BestElevator, BestElevator.StopList, floorNumber);
-                    UpdateList(BestElevator, BestElevator.StopList, 1);
-                    Console.WriteLine(" StopList: [ " + string.Join(" | ", BestElevator.StopList) + " ]");
+                    UpdateList(BestElevator, BestElevator.stopList, floorNumber);
+                    UpdateList(BestElevator, BestElevator.stopList, 1);
+                    Console.WriteLine(" stopList: [ " + string.Join(" | ", BestElevator.stopList) + " ]");
 
                     move(BestElevator);
                 }
@@ -287,7 +276,7 @@ namespace src
                     Console.Write(" Take ElevatorID: {0} which is currently at floor {1}. ", BestElevator.identification, BestElevator.position);
                     UpdateList(BestElevator, BestElevator.BufferList, floorNumber);
                     UpdateList(BestElevator, BestElevator.BufferList, 1);
-                    Console.Write(" StopList: [ " + string.Join(" | ", BestElevator.StopList) + " ]");
+                    Console.Write(" stopList: [ " + string.Join(" | ", BestElevator.stopList) + " ]");
                     Console.WriteLine(" BufferLsit: [ " + string.Join(" | ", BestElevator.BufferList) + " ]");
 
                     if (floorNumber > 1)
@@ -306,8 +295,8 @@ namespace src
             {
                 Console.Write(" Take ElevatorID: {0} which is currently at floor {1}. ", BestElevator.identification, BestElevator.position);
                 UpdateList(BestElevator, BestElevator.BufferList, floorNumber);
-                UpdateList(BestElevator, BestElevator.StopList, 1);
-                Console.Write(" StopList: [ " + string.Join(" | ", BestElevator.StopList) + " ]");
+                UpdateList(BestElevator, BestElevator.stopList, 1);
+                Console.Write(" stopList: [ " + string.Join(" | ", BestElevator.stopList) + " ]");
                 Console.WriteLine(" BufferLsit: [ " + string.Join(" | ", BestElevator.BufferList) + " ]");
 
 
@@ -342,7 +331,7 @@ namespace src
                 }
             }
             Console.WriteLine("the column identification for floor {0} is {1}", RequestedFloor, currentColumn.identification);
-            int DistanceToGo = 1000;
+            int distanceToGo = 1000;
             Elevator BestElevator = currentColumn.elevatorList[0];
             string userDirection;
             if (RequestedFloor > 1)
@@ -363,16 +352,16 @@ namespace src
                 }
                 else
                 {
-                    currentDestination = elevator.StopList.Last();
+                    currentDestination = elevator.stopList.Last();
                 }
                 Console.Write("111elID = {0}, elPos = {1}, elDir = {2}, current Destination = {3}", elevator.identification, elevator.position, elevator.direction, currentDestination);
 
                 int distance = TravelDistance(elevator, 1, userDirection);
                 Console.WriteLine(". distanceToGo: {0}", distance);
 
-                if (distance <= DistanceToGo)
+                if (distance <= distanceToGo)
                 {
-                    DistanceToGo = distance;
+                    distanceToGo = distance;
                     BestElevator = elevator;
                 }
             }
@@ -380,7 +369,7 @@ namespace src
             if (BestElevator.position == 1)
             {
 
-                UpdateList(BestElevator, BestElevator.StopList, RequestedFloor);
+                UpdateList(BestElevator, BestElevator.stopList, RequestedFloor);
             }
             else
             {
@@ -408,7 +397,7 @@ namespace src
         */
         public int TravelDistance(Elevator elevator, int UserPosition, string userDirection)
         {
-            if (elevator.direction != "IDLE" | elevator.StopList.Count != 0)
+            if (elevator.direction != "IDLE" | elevator.stopList.Count != 0)
             {
                 if (elevator.direction == userDirection)
                 {
@@ -422,12 +411,12 @@ namespace src
                     }
                     else
                     {
-                        return Math.Abs(elevator.StopList.Last() - elevator.position) + Math.Abs(elevator.StopList.Last() - UserPosition);
+                        return Math.Abs(elevator.stopList.Last() - elevator.position) + Math.Abs(elevator.stopList.Last() - UserPosition);
                     }
                 }
                 else
                 {
-                    return Math.Abs(elevator.StopList.Last() - elevator.position) + Math.Abs(elevator.StopList.Last() - UserPosition); ;
+                    return Math.Abs(elevator.stopList.Last() - elevator.position) + Math.Abs(elevator.stopList.Last() - UserPosition); ;
                 }
             }
             else
@@ -461,12 +450,12 @@ namespace src
         */
         public void move(Elevator elevator)
         {
-            while (elevator.StopList.Count > 0)
+            while (elevator.stopList.Count > 0)
             {
-                if (elevator.StopList[0] > elevator.position)
+                if (elevator.stopList[0] > elevator.position)
                 {
                     elevator.direction = "UP";
-                    while (elevator.position < elevator.StopList[0])
+                    while (elevator.position < elevator.stopList[0])
                     {
                         elevator.position += 1;
                         if (elevator.position != 0)
@@ -480,12 +469,12 @@ namespace src
                     }
                     elevator.Door = "OPENED";
                     Console.WriteLine("Door is open");
-                    elevator.StopList.RemoveAt(0);
+                    elevator.stopList.RemoveAt(0);
                 }
                 else
                 {
                     elevator.direction = "DOWN";
-                    while (elevator.position > elevator.StopList.Last())
+                    while (elevator.position > elevator.stopList.Last())
                     {
                         elevator.position -= 1;
                         if (elevator.position != 0)
@@ -500,7 +489,7 @@ namespace src
                     elevator.Door = "OPENED";
                     Console.WriteLine("Door opening...");
                     Console.WriteLine("<DOOR OPEN>");
-                    elevator.StopList.RemoveAt(elevator.StopList.Count - 1);
+                    elevator.stopList.RemoveAt(elevator.stopList.Count - 1);
                 }
 
                 elevator.Door = "CLOSED";
@@ -513,7 +502,7 @@ namespace src
             }
             if (elevator.BufferList.Count > 0)
             {
-                elevator.StopList = elevator.BufferList;
+                elevator.stopList = elevator.BufferList;
                 elevator.direction = elevator.BufferDirection;
                 move(elevator);
             }
@@ -616,6 +605,26 @@ namespace src
             L59,
             L60,
         }
+
+        enum ScenarioA
+        {
+
+        }
+
+        enum ScenarioB
+        {
+
+        }
+
+        enum ScenarioC
+        {
+
+        }
+
+        enum ScenarioD
+        {
+
+        }
     class Program
     {
         static void Main(string[] args)
@@ -623,7 +632,25 @@ namespace src
             int myNumOfFloor = (int)CommercialBuilding.NumberOfFloor;
             int myBasement = (int)CommercialBuilding.Basement;
             int myColumns = (int)CommercialBuilding.Columns;
-            int myCages =(int)CommercialBuilding.Cages; 
+            int myCages =(int)CommercialBuilding.Cages;
+
+            // Prompt user to enter a name.
+            Console.WriteLine("Enter your scenario, please:");
+
+            // Now read the name entered.
+            string scenario = Console.ReadLine();
+
+            // Greet the user with the name that was entered.
+            Console.WriteLine("Scenario, " + scenario);
+
+            // Wait for user to acknowledge the results.
+
+            Console.WriteLine("Press Enter to terminate...");
+            Console.Read();
+            Console.WriteLine(myNumOfFloor);
+            Console.WriteLine(myBasement);
+            Console.WriteLine(myColumns);
+            Console.WriteLine(myCages);
             Battery myBattery = new Battery(myColumns,myNumOfFloor,myBasement,myCages);
         }
     }
